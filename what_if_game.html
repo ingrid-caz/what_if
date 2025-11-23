@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What If ?</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
+
+    html,
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background-color: #000;
+      font-family: "PT Mono", monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Le conteneur principal au ratio 4:3 */
+    #game-container {
+      position: relative;
+      width: 60vw;
+      max-width: 1200px;
+      aspect-ratio: 89 / 65;
+      /* ✅ assure un ratio 4:3 */
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: url(images/question_01.jpg);
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    #question-container {
+      position: absolute;
+      display: flow-root;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      color: white;
+    }
+
+    .question {
+      display: block;
+      margin: 40px auto;
+      font-size: 20px;
+      max-width: 80%;
+    }
+
+    .answers {
+      margin-top: 425px;
+      width: 324px;
+      transform: rotate(-10deg);
+      margin-right: auto;
+      margin-left: 10px;
+    }
+
+    .answers button {
+      background-color: #f37a3400;
+      color: #000;
+      border: 0px solid white;
+      margin: 20px;
+      font-size: 12px;
+      text-align: left;
+      font-family: "PT Mono", monospace;
+      cursor: pointer;
+      z-index: 5;
+    }
+
+    .answers button:hover {
+      color: #c70000;
+      cursor: pointer;
+      transform: scale(1.03);
+    }
+
+    .overlay {
+      position: relative;
+      width: 60vw;
+      max-width: 1200px;
+      aspect-ratio: 89 / 65;
+      /* ✅ assure un ratio 4:3 */
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: url(images/overlay.png);
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+    }
+
+    #video-container {
+      position: absolute;
+      display: none;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #restart {
+      width: 100%;
+      height: 100%;
+      background-color: #00000000;
+      position: absolute;
+      z-index: 3;
+    }
+
+    .bouton {
+      background-color: #00000000;
+      position: absolute;
+      display: flex;
+      align-items: flex-start;
+      z-index: 4;
+    }
+
+    .bouton:hover {
+      color: #c70000;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <!--<div id="restart">
+    <img src="images/papier_start.png" style="width: 150px; height: auto;">
+    <div class="bouton" onclick="window.location.href='what_if_start.html'"><p>Restart</p>
+    </div>
+  </div>-->
+
+  <div id="game-container">
+
+    <div class="overlay">
+
+    </div>
+    <div id="question-container">
+      <!-- Les questions s'affichent ici -->
+    </div>
+
+    <div id="video-container">
+      <video id="result-video" autoplay playsinline></video>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        text: "J’ai des mandarines, tu en veux ? Ma grandmère m'en donnait tout le temps petite vu que je tombe facilement malade.",
+        answers: [
+          { text: "Oui je veux bien merci, c'est vrai que ça aide pour les vitamines en hiver.", points: 0, image: "img/bonne-reponse.jpg" },
+          { text: "Je n’ai pas très faim mais merci, d'ailleurs tu savais que pour diférencier les mandarines des clémentines il faut compter les pépins.", points: 0 }
+        ]
+      },
+      {
+        text: "Avec ma pote on est allé au parc, j’ai ramassé de la lavande, je crois?.",
+        answers: [
+          { text: "C’est vrai que c'est trop beau la lavande, ça a une teinte unique.", points: 0 },
+          { text: "Moi aussi j’adore la lavande, j’aurai trop voulu venir au parc avec vous.", points: -5 }
+        ]
+      },
+      {
+        text: "Je suis aller au musée hier avec ma mère, il y avait des oeuvres de Monet.",
+        answers: [
+          { text: "Ah oui, ç'était bien ? Apparrament ces oeuvres sont très impressionantes.", points: 2 },
+          { text: "Moi aussi, j'adore cet artiste. On aurai dû y aller ensemble", points: -5 }
+        ]
+      },
+      {
+        text: "Coucou on sort demain avec Laura, t'es chaud on se voit après ?",
+        answers: [
+          { text: "Ah trop cool je peux venir avec vous ? C'est super sympa de proposer.", points: 10 },
+          { text: "Ah je savais pas que vous sortiez, non t'inquiète ça ira...", points: -10 }
+        ]
+      },
+      {
+        text: "Je suis allée au concert de Nine Inch Nails, j'ai rencontré plein de personnes super sympa ?",
+        answers: [
+          { text: "Ah oui c'est super ça, ça crée des connexions.", points: 10 },
+          { text: "J'espère que tu t'es bien amusée.", points: -10 }
+        ]
+      },
+      {
+        text: "T'aimes ma nouvelle coupe ?",
+        answers: [
+          { text: "Wouah ça te va trop bien, ça change des coiffeuse qui te coupe la moitié de tes cheveux.", points: 10 },
+          { text: "Oh c’est qui ta coiffeuse ? J'aimerai y aller aussi.", points: -10 }
+        ]
+      },
+      {
+        text: "Avec léa, on est allé voir en concert, il a joué, on était trop contente !!!",
+        answers: [
+          { text: "Pourquoi tu ne me l'a pas dit, je pensais qu'on se disait tout.", points: 10 },
+          { text: "Et pourquoi tu ne me l'a pas dit, je t'ai dis de me dire ce genre de choses.", points: -10 }
+        ]
+      },
+    ];
+
+    let currentQuestionIndex = 0;
+    let totalPoints = 0;
+
+    const questionContainer = document.getElementById('question-container');
+    const videoContainer = document.getElementById('video-container');
+    const resultVideo = document.getElementById('result-video');
+
+    function showQuestion() {
+      const question = questions[currentQuestionIndex];
+      questionContainer.innerHTML = `
+        <div class="answers">
+          ${question.answers.map((answer, index) => `
+            <button onclick="selectAnswer(${index}); repondre()">${answer.text}</button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function selectAnswer(index) {
+      const selectedAnswer = questions[currentQuestionIndex].answers[index];
+      totalPoints += selectedAnswer.points;
+
+      // Désactiver les boutons après réponse
+      const buttons = document.querySelectorAll('.answers button');
+      buttons.forEach(btn => btn.disabled = true);
+
+      // Passer à la question suivante
+      currentQuestionIndex++;
+
+      if (currentQuestionIndex < questions.length) {
+        // enchaîne immédiatement
+        showQuestion();
+      } else {
+        // délai avant endGame uniquement
+        setTimeout(() => {
+          endGame();
+        }, 4000); // délai en ms (ex : 1,5 s)
+      }
+    }
+
+    const backgrounds = [
+      'images/question_01.jpg',
+      'images/question_02.jpg',
+      'images/question_03.jpg',
+      'images/question_04.jpg',
+      'images/question_05.jpg',
+      'images/question_06.jpg',
+      'images/question_07.jpg',
+      'images/question_08.jpg'
+    ];
+
+    let index = 0;
+
+    function repondre() {
+      // Changer le fond
+      index = (index + 1) % backgrounds.length;
+      document.getElementById("game-container").style.backgroundImage = `url('${backgrounds[index]}')`;
+    }
+
+    function endGame() {
+      questionContainer.style.display = 'none';
+      videoContainer.style.display = 'block';
+
+      const videoSrc = totalPoints >= 0
+        ? "vidéo/positive.mp4"
+        : "vidéo/negative.mp4";
+
+      resultVideo.src = videoSrc;
+      resultVideo.play();
+      resultVideo.onended = () => {
+        window.location.href = "what_if_end.html"; // Modifie le nom du fichier
+      };
+    }
+
+    // Démarrer le jeu
+    showQuestion();
+  </script>
+
+</body>
+
+</html>
