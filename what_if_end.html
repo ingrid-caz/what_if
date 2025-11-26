@@ -67,7 +67,7 @@
     }
 
     .bouton img {
-      width: 220px;
+      width: 210px;
       filter: brightness(0)
     }
 
@@ -97,7 +97,8 @@
     #explication img {
       width: 390px;
     }
-    #texte {
+
+    #restart {
       display: none;
       position: fixed;
       background: rgba(255, 255, 255, 0);
@@ -109,9 +110,21 @@
       left: 0;
     }
 
-    #texte img{
-      filter: brightness(0);
+    #texte {
+      display: block;
       position: fixed;
+      background: rgba(255, 255, 255, 0);
+      z-index: 6;
+      color: rgb(0, 0, 0);
+      width: 45%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+
+    #texte img{
+      width: 180px;
+      filter: brightness(0)
     }
 
     #texte img:hover{
@@ -123,19 +136,28 @@
 <body>
   <div id="overlay"></div>
   <div id="debut">
-    <img src="images/papier_start.png" style="width: 200px;">
+    <img src="images/papier_start.png" style="width: 180px;">
     <div class="bouton" id="érotomanie"><img src="images/érotomanie.png">
     </div>
   </div>
   <div id="explication">
     <img src="images/post-it_fin2.png">
   </div>
+  <div id="restart">
+    <img src="images/papier_start.png" style="width: 170px;">
+    <div class="bouton" id="texte"  onclick="window.location.href='what_if_start.html'"><img src="images/restart.png">
+    </div>
+  </div>
   
   <script>
     document.getElementById("érotomanie").addEventListener("click", function () {
       document.getElementById("explication").style.display = "block";
-      document.getElementById("texte").style.display = "block";
+      setTimeout(() => {
+          document.getElementById("restart").style.display = "block";
+        }, 3000);
+      
     });
+
   </script>
 </body>
 
